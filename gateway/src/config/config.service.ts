@@ -47,17 +47,6 @@ export interface IJsonConfig {
     apiTokenExpiresIn: string;
   }
   /**
-   * Database connection configuration
-   */
-  database: {
-    type: 'postgres';
-    host: string;
-    port: number;
-    database: string;
-    username: string;
-    password: string;
-  };
-  /**
    * S3 connection configuration
    */
   s3: {
@@ -156,11 +145,6 @@ export class ConfigService {
   private readonly environmentSchema = joi.object<NodeJS.ProcessEnv>({
     CONFIG_PATH: joi.string().optional(),
     NODE_ENV: joi.string().valid(...values(NodeEnv)).required(),
-    DB_HOST: joi.string().required(),
-    DB_PORT: joi.number().port().required(),
-    DB_USER: joi.string().required(),
-    DB_PASSWORD: joi.string().required(),
-    DB_BACK: joi.string().required(),
     JWT_TOKEN_SECRET: joi.string().required(),
     S3_ACCESS_KEY: joi.string().required(),
     S3_SECRET_KEY: joi.string().required(),
@@ -179,14 +163,6 @@ export class ConfigService {
       userTokenExpiresIn: joi.string().required().custom(vercelMsValidator),
       apiTokenExpiresIn: joi.string().optional().custom(vercelMsValidator).default('500y'),
     }).required(),
-    database: joi.forbidden().default({
-      type: 'postgres',
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      database: process.env.DB_BACK,
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-    } satisfies IJsonConfig['database']),
     s3: joi.object<IJsonConfig['s3']>({
       bucketName: joi.string().required(),
       endPoint: joi.string().required(),
@@ -195,5 +171,5 @@ export class ConfigService {
       secretKey: joi.string().forbidden().default(process.env.S3_SECRET_KEY),
       presignedUrlExpiration: joi.optional().default(ms('1d') / 1000),
     }),
-  }).rename('backPort', 'port');
+  }).raname('gatewayPort', 'port');
 }

@@ -16,11 +16,6 @@ namespace NodeJS {
      * Current environment
      */
     NODE_ENV: NodeEnv;
-    DB_HOST: string;
-    DB_PORT: string;
-    DB_USER: string;
-    DB_PASSWORD: string;
-    DB_BACK: string;
     /**
      * JWT secret
      */

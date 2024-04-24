@@ -160,7 +160,7 @@ export class ConfigService {
     DB_PORT: joi.number().port().required(),
     DB_USER: joi.string().required(),
     DB_PASSWORD: joi.string().required(),
-    DB_BACK: joi.string().required(),
+    DB_TOKEN: joi.string().required(),
     JWT_TOKEN_SECRET: joi.string().required(),
     S3_ACCESS_KEY: joi.string().required(),
     S3_SECRET_KEY: joi.string().required(),
@@ -183,7 +183,7 @@ export class ConfigService {
       type: 'postgres',
       host: process.env.DB_HOST,
       port: Number(process.env.DB_PORT),
-      database: process.env.DB_BACK,
+      database: process.env.DB_TOKEN,
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
     } satisfies IJsonConfig['database']),
@@ -195,5 +195,5 @@ export class ConfigService {
       secretKey: joi.string().forbidden().default(process.env.S3_SECRET_KEY),
       presignedUrlExpiration: joi.optional().default(ms('1d') / 1000),
     }),
-  }).rename('backPort', 'port');
+  }).rename('tokenPort', 'port');
 }

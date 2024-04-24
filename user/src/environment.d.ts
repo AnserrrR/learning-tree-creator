@@ -20,7 +20,7 @@ namespace NodeJS {
     DB_PORT: string;
     DB_USER: string;
     DB_PASSWORD: string;
-    DB_BACK: string;
+    DB_USERS: string;
     /**
      * JWT secret
      */
