@@ -1,4 +1,5 @@
 {
+  "host": "localhost",
   "backPort": 5000,
   "gatewayPort": 5001,
   "permissionPort": 5002,

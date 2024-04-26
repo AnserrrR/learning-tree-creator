@@ -24,10 +24,13 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=dev
-      - POSTGRES_DB=learning-tree-creator
+      - POSTGRES_MULTIPLE_DATABASES="learning-tree-creator","users"
     volumes:
       - ./dev-db-data:/var/lib/postgresql/data
       - ./backups:/opt/backups
+      - ./pg-init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - backend
 
   s3:
     image: minio/minio
@@ -40,3 +43,10 @@ services:
       MINIO_ROOT_USER: 12345678
       MINIO_ROOT_PASSWORD: 12345678
     entrypoint: sh -c "mc mb data/learning-tree-creator && minio server /data"
+
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    external:
+      name: infrastructure

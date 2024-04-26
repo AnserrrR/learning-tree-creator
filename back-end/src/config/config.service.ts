@@ -18,6 +18,10 @@ export interface IJsonConfig {
    */
   nodeEnv: NodeEnv;
   /**
+   * Application host.
+   */
+  host: string;
+  /**
    * Application port.
    */
   port: number;
@@ -171,6 +175,7 @@ export class ConfigService {
    */
   private readonly configSchema = joi.object<IJsonConfig>({
     nodeEnv: joi.string().forbidden().default(process.env.NODE_ENV),
+    host: joi.string().hostname().required(),
     port: joi.number().port().required(),
     filesUrl: joi.string().optional().default('/files/'),
     imagesUrl: joi.string().optional().default('/images/'),
