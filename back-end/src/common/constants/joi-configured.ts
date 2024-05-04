@@ -2,8 +2,8 @@
 import Joi, { ValidationError } from 'joi';
 import { set } from 'lodash';
 import ms from 'ms';
-import { KeysPostfixDeep } from './type-utils/keys-postfix-deep';
-import { excelDateToJsDate } from './excel-date-to-js-date';
+import { KeysPostfixDeep } from '../type-utils/keys-postfix-deep';
+import { excelDateToJsDate } from '../functions/excel-date-to-js-date';
 
 /**
  * Configured instance of Joi.

@@ -1,20 +1,22 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
-import { AppModule } from './app.module';
+import { UserModule } from './user.module';
+import { TcpOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from './config/config.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const { config: { port, nodeEnv } } = await app.resolve(ConfigService);
+  const { config: { host, port, nodeEnv } } = new ConfigService();
+  const app = await NestFactory.createMicroservice(UserModule, {
+    transport: Transport.TCP,
+    options: {
+      host,
+      port,
+    },
+  } as TcpOptions);
 
-  app.enableCors({
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    origin: true,
-    credentials: true,
-  });
-  await app.listen(port);
+  await app.listen();
 
   const logger = new Logger('Bootstrap');
-  logger.log(`App successfully launched in ${nodeEnv.toUpperCase()} mode on port ${port}`);
+  logger.log(`User service successfully launched in ${nodeEnv.toUpperCase()} mode on ${host}:${port}`);
 }
 bootstrap();

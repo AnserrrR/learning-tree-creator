@@ -22,14 +22,6 @@ namespace NodeJS {
     DB_PASSWORD: string;
     DB_BACK: string;
     /**
-     * JWT secret
-     */
-    JWT_TOKEN_SECRET: string;
-    /**
-     * IAS API key
-     */
-    IAS_API_KEY: string;
-    /**
      * S3 access key (login)
      */
     S3_ACCESS_KEY: string;

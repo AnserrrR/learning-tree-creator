@@ -1,14 +1,14 @@
 {
   "host": "localhost",
-  "backPort": 5000,
-  "gatewayPort": 5001,
+  "gatewayPort": 5000,
+  "backPort": 5001,
   "permissionPort": 5002,
   "tokenPort": 5003,
   "userPort": 5004,
   "filesUrl": "../files",
   "imagesUrl": "../images",
   "jwtToken": {
-    "userTokenExpiresIn": "1y"
+    "expiresIn": "1y"
   },
   "s3": {
     "bucketName": "learning-tree-creator",

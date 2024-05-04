@@ -5,7 +5,7 @@ import type { ReadonlyDeep } from 'type-fest';
 import { Injectable, Logger } from '@nestjs/common';
 import { set, values } from 'lodash';
 import ms from 'ms';
-import { joi, vercelMsValidator } from '../common/joi-configured';
+import { joi, vercelMsValidator } from '../common/constants/joi-configured';
 import { NodeEnv } from './node-env.enum';
 
 /**
@@ -17,6 +17,10 @@ export interface IJsonConfig {
    * App environment mode enum.
    */
   nodeEnv: NodeEnv;
+  /**
+   * Application host.
+   */
+  host: string;
   /**
    * Application port.
    */
@@ -40,11 +44,7 @@ export interface IJsonConfig {
     /**
      * User token expiration time
      */
-    userTokenExpiresIn: string;
-    /**
-     * API token expiration time
-     */
-    apiTokenExpiresIn: string;
+    expiresIn: string;
   }
   /**
    * Database connection configuration
@@ -56,17 +56,6 @@ export interface IJsonConfig {
     database: string;
     username: string;
     password: string;
-  };
-  /**
-   * S3 connection configuration
-   */
-  s3: {
-    bucketName: string;
-    endPoint: string;
-    port?: number;
-    accessKey: string;
-    secretKey: string;
-    presignedUrlExpiration: number;
   };
 }
 
@@ -162,8 +151,6 @@ export class ConfigService {
     DB_PASSWORD: joi.string().required(),
     DB_TOKEN: joi.string().required(),
     JWT_TOKEN_SECRET: joi.string().required(),
-    S3_ACCESS_KEY: joi.string().required(),
-    S3_SECRET_KEY: joi.string().required(),
   }).required();
 
   /**
@@ -171,13 +158,13 @@ export class ConfigService {
    */
   private readonly configSchema = joi.object<IJsonConfig>({
     nodeEnv: joi.string().forbidden().default(process.env.NODE_ENV),
+    host: joi.string().hostname().required(),
     port: joi.number().port().required(),
     filesUrl: joi.string().optional().default('/files/'),
     imagesUrl: joi.string().optional().default('/images/'),
     jwtToken: joi.object<IJsonConfig['jwtToken']>({
       secret: joi.string().forbidden().default(process.env.JWT_TOKEN_SECRET),
-      userTokenExpiresIn: joi.string().required().custom(vercelMsValidator),
-      apiTokenExpiresIn: joi.string().optional().custom(vercelMsValidator).default('500y'),
+      expiresIn: joi.string().required().custom(vercelMsValidator),
     }).required(),
     database: joi.forbidden().default({
       type: 'postgres',
@@ -187,13 +174,5 @@ export class ConfigService {
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
     } satisfies IJsonConfig['database']),
-    s3: joi.object<IJsonConfig['s3']>({
-      bucketName: joi.string().required(),
-      endPoint: joi.string().required(),
-      port: joi.number().port().optional(),
-      accessKey: joi.string().forbidden().default(process.env.S3_ACCESS_KEY),
-      secretKey: joi.string().forbidden().default(process.env.S3_SECRET_KEY),
-      presignedUrlExpiration: joi.optional().default(ms('1d') / 1000),
-    }),
   }).rename('tokenPort', 'port');
 }

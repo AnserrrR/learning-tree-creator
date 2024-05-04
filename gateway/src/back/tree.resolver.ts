@@ -4,6 +4,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Tree } from './objects/tree.object';
 import { firstValueFrom } from 'rxjs';
 import { GraphQLUUID } from 'graphql-scalars';
+import { MethodsPatterns } from '../common/constants/methods-patterns';
 
 @Resolver()
 export class TreeResolver {
@@ -12,8 +13,8 @@ export class TreeResolver {
   ) {}
 
   @Query(() => Tree)
-  async getTreeById(@Args('id', { type: () => GraphQLUUID })id: string):
+  async getTreeById(@Args('id', { type: () => GraphQLUUID }) id: string):
   Promise<Tree> {
-    return firstValueFrom(this.backServiceClient.send('tree_get_by_id', id));
+    return firstValueFrom(this.backServiceClient.send(MethodsPatterns.getTreeById, id));
   }
 }

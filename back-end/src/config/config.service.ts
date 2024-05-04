@@ -5,7 +5,7 @@ import type { ReadonlyDeep } from 'type-fest';
 import { Injectable, Logger } from '@nestjs/common';
 import { set, values } from 'lodash';
 import ms from 'ms';
-import { joi, vercelMsValidator } from '../common/joi-configured';
+import { joi, vercelMsValidator } from '../common/constants/joi-configured';
 import { NodeEnv } from './node-env.enum';
 
 /**
@@ -33,23 +33,6 @@ export interface IJsonConfig {
    * Absolute path to folder where stores uploaded images.
    */
   imagesUrl: string;
-  /**
-   * JWT auth options
-   */
-  jwtToken: {
-    /**
-     * Secret for token signing
-     */
-    secret: string;
-    /**
-     * User token expiration time
-     */
-    userTokenExpiresIn: string;
-    /**
-     * API token expiration time
-     */
-    apiTokenExpiresIn: string;
-  }
   /**
    * Database connection configuration
    */
@@ -165,7 +148,6 @@ export class ConfigService {
     DB_USER: joi.string().required(),
     DB_PASSWORD: joi.string().required(),
     DB_BACK: joi.string().required(),
-    JWT_TOKEN_SECRET: joi.string().required(),
     S3_ACCESS_KEY: joi.string().required(),
     S3_SECRET_KEY: joi.string().required(),
   }).required();
@@ -179,11 +161,6 @@ export class ConfigService {
     port: joi.number().port().required(),
     filesUrl: joi.string().optional().default('/files/'),
     imagesUrl: joi.string().optional().default('/images/'),
-    jwtToken: joi.object<IJsonConfig['jwtToken']>({
-      secret: joi.string().forbidden().default(process.env.JWT_TOKEN_SECRET),
-      userTokenExpiresIn: joi.string().required().custom(vercelMsValidator),
-      apiTokenExpiresIn: joi.string().optional().custom(vercelMsValidator).default('500y'),
-    }).required(),
     database: joi.forbidden().default({
       type: 'postgres',
       host: process.env.DB_HOST,

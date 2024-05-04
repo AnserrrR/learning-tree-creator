@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from './config/config.module';
-import { TreeModule } from './tree/tree.module';
+import { TokenController } from './token.controller';
 import { ConfigService } from './config/config.service';
 import { AppEntities } from './common/constants/app.entities';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from './config/config.module';
+import { TokenService } from './token.service';
 
 @Module({
   imports: [
-    ConfigModule,
-    TreeModule,
     TypeOrmModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
         ...configService.config.database,
@@ -17,8 +16,9 @@ import { AppEntities } from './common/constants/app.entities';
       }),
       inject: [ConfigService],
     }),
+    ConfigModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [TokenController],
+  providers: [TokenService],
 })
-export class AppModule {}
+export class TokenModule {}

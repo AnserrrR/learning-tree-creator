@@ -17,6 +17,6 @@ async function bootstrap() {
   await app.listen();
 
   const logger = new Logger('Bootstrap');
-  logger.log(`App successfully launched in ${nodeEnv.toUpperCase()} mode on ${host}:${port}`);
+  logger.log(`Main service successfully launched in ${nodeEnv.toUpperCase()} mode on ${host}:${port}`);
 }
 bootstrap();
