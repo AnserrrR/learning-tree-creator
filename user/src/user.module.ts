@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from './config/config.service';
-import { AppEntities } from './common/constants/app.entities';
+import { AppEntities } from './app.entities';
 import { ConfigModule } from './config/config.module';
 
 @Module({

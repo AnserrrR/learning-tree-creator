@@ -1,8 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { AppBase } from '../../common/gql/app-base.object';
+import { AppBaseObject } from '../../common/gql/app-base.object';
 
 @ObjectType()
-export class Tree extends AppBase {
+export class Tree extends AppBaseObject {
   @Field(() => String)
   name: string;
 

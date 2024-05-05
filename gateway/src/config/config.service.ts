@@ -28,6 +28,14 @@ export interface IJsonConfig {
    * Backend service port.
    */
   backPort: number;
+  /**
+   * User service port.
+   */
+  userPort: number;
+  /**
+   * Token port.
+   */
+  tokenPort: number;
 }
 
 /**
@@ -126,5 +134,7 @@ export class ConfigService {
     host: joi.string().hostname().required(),
     port: joi.number().port().required(),
     backPort: joi.number().port().required(),
+    userPort: joi.number().port().required(),
+    tokenPort: joi.number().port().required(),
   }).rename('gatewayPort', 'port');
 }
