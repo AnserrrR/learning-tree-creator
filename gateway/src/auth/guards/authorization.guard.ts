@@ -6,7 +6,6 @@ import { firstValueFrom } from 'rxjs';
 import { MethodsPatterns } from '../../common/constants/methods-patterns';
 import { IBaseResponse } from '../../common/interfaces/base-response.interface';
 import { GraphQLError } from 'graphql/error';
-import { Token } from '../objects/token.object';
 import { User } from '../objects/user.object';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { ICurrentAuth } from '../interfaces/current-auth.interface';

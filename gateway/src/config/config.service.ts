@@ -36,6 +36,10 @@ export interface IJsonConfig {
    * Token port.
    */
   tokenPort: number;
+  /**
+   * Permission service port.
+   */
+  permissionPort: number;
 }
 
 /**
@@ -136,5 +140,6 @@ export class ConfigService {
     backPort: joi.number().port().required(),
     userPort: joi.number().port().required(),
     tokenPort: joi.number().port().required(),
+    permissionPort: joi.number().port().required(),
   }).rename('gatewayPort', 'port');
 }

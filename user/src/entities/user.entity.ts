@@ -1,7 +1,6 @@
 import { Column, Entity } from 'typeorm';
 import { UserRoleEnum } from '../enums/user-role.enum';
 import { AppBaseEntity } from '../common/entities/app-base.entity';
-import { Exclude } from 'class-transformer';
 import bcrypt from 'bcrypt';
 
 @Entity()

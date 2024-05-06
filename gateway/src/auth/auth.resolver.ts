@@ -8,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 import { GraphQLError } from 'graphql/error';
 import { Public } from './decorators/public.decorator';
 import { CurrentAuth } from './decorators/current-auth.decorator';
+import { MethodPermissions } from './decorators/method-permissions.decorator';
 
 @Resolver()
 export class AuthResolver {
@@ -96,10 +97,13 @@ export class AuthResolver {
     return tokenResponse.data.token;
   }
 
+  @MethodPermissions(MethodsPatterns.deleteToken)
   @Mutation(() => Boolean, { description: 'Logout user' })
-  async logout(@CurrentAuth('token') token: string): Promise<boolean> {
+  async logout(@CurrentAuth('user') user: User): Promise<boolean> {
     const response = await firstValueFrom(
-      this.tokenService.send<IBaseResponse>(MethodsPatterns.deleteToken, { token }),
+      this.tokenService.send<IBaseResponse>(MethodsPatterns.deleteToken, {
+        userId: user.id,
+      }),
     );
     if (response.status !== HttpStatus.OK) {
       throw new GraphQLError(

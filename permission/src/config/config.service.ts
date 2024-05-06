@@ -4,8 +4,7 @@ import * as process from 'process';
 import type { ReadonlyDeep } from 'type-fest';
 import { Injectable, Logger } from '@nestjs/common';
 import { set, values } from 'lodash';
-import ms from 'ms';
-import { joi, vercelMsValidator } from '../common/constants/joi-configured';
+import { joi } from '../common/constants/joi-configured';
 import { NodeEnv } from './node-env.enum';
 
 /**
@@ -17,6 +16,10 @@ export interface IJsonConfig {
    * App environment mode enum.
    */
   nodeEnv: NodeEnv;
+  /**
+   * Application host.
+   */
+  host: string;
   /**
    * Application port.
    */
@@ -116,6 +119,7 @@ export class ConfigService {
    */
   private readonly configSchema = joi.object<IJsonConfig>({
     nodeEnv: joi.string().forbidden().default(process.env.NODE_ENV),
+    host: joi.string().hostname().required(),
     port: joi.number().port().required(),
   }).rename('permissionPort', 'port');
 }

@@ -17,4 +17,9 @@ export const MethodsPatterns = {
   createToken: 'token_create',
   deleteToken: 'token_delete',
   decodeToken: 'token_decode',
+
+  /**
+   * Permission service methods
+   */
+  checkPermissions: 'permissions_check',
 }

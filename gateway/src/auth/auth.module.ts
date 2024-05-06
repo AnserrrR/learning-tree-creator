@@ -4,6 +4,7 @@ import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { AuthorizationGuard } from './guards/authorization.guard';
+import { PermissionGuard } from './guards/permission.guard';
 
 @Module({
   imports: [ConfigModule],
@@ -35,8 +36,25 @@ import { AuthorizationGuard } from './guards/authorization.guard';
       inject: [ConfigService],
     },
     {
+      provide: 'PERMISSION_SERVICE',
+      useFactory: (configService: ConfigService) => {
+        return ClientProxyFactory.create({
+          transport: Transport.TCP,
+          options: {
+            host: configService.config.host,
+            port: configService.config.permissionPort,
+          },
+        });
+      },
+      inject: [ConfigService],
+    },
+    {
       provide: 'APP_GUARD',
       useClass: AuthorizationGuard,
+    },
+    {
+      provide: 'APP_GUARD',
+      useClass: PermissionGuard,
     },
     AuthResolver,
   ],
