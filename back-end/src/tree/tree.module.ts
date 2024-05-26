@@ -4,6 +4,6 @@ import { TreeService } from './tree.service';
 
 @Module({
   controllers: [TreeController],
-  providers: [TreeService]
+  providers: [TreeService],
 })
 export class TreeModule {}

@@ -10,5 +10,5 @@ export const METADATA_PERMISSIONS_KEY = 'permissions';
  */
 export const MethodPermissions = (permissions: string[] | string) => SetMetadata(
   METADATA_PERMISSIONS_KEY,
-  permissions
+  permissions,
 );

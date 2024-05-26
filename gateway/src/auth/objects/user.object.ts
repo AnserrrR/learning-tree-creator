@@ -8,7 +8,7 @@ import { AppBaseObject } from '../../common/gql/app-base.object';
  */
 @ObjectType({ description: 'User object' })
 export class User extends AppBaseObject {
-  @Field( () => GraphQLEmailAddress, { description: 'User email' })
+  @Field(() => GraphQLEmailAddress, { description: 'User email' })
   email: string;
 
   @Field(() => UserRoleEnum, { description: 'User role' })

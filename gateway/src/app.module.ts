@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigModule } from './config/config.module';
 import { BackModule } from './back/back.module';
-import { GraphQLModule } from '@nestjs/graphql';
 import { AuthModule } from './auth/auth.module';
-import { AuthorizationGuard } from './auth/guards/authorization.guard';
 
 @Module({
   imports: [

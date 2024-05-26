@@ -1,7 +1,7 @@
 import { Column, Entity } from 'typeorm';
+import bcrypt from 'bcrypt';
 import { UserRoleEnum } from '../enums/user-role.enum';
 import { AppBaseEntity } from '../common/entities/app-base.entity';
-import bcrypt from 'bcrypt';
 
 @Entity()
 export class UserEntity extends AppBaseEntity {

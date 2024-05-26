@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
+import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { AuthResolver } from './auth.resolver';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
-import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { AuthorizationGuard } from './guards/authorization.guard';
 import { PermissionGuard } from './guards/permission.guard';
 
@@ -11,41 +11,35 @@ import { PermissionGuard } from './guards/permission.guard';
   providers: [
     {
       provide: 'USER_SERVICE',
-      useFactory: (configService: ConfigService) => {
-        return ClientProxyFactory.create({
-          transport: Transport.TCP,
-          options: {
-            host: configService.config.host,
-            port: configService.config.userPort,
-          },
-        });
-      },
+      useFactory: (configService: ConfigService) => ClientProxyFactory.create({
+        transport: Transport.TCP,
+        options: {
+          host: configService.config.host,
+          port: configService.config.userPort,
+        },
+      }),
       inject: [ConfigService],
     },
     {
       provide: 'TOKEN_SERVICE',
-      useFactory: (configService: ConfigService) => {
-        return ClientProxyFactory.create({
-          transport: Transport.TCP,
-          options: {
-            host: configService.config.host,
-            port: configService.config.tokenPort,
-          },
-        });
-      },
+      useFactory: (configService: ConfigService) => ClientProxyFactory.create({
+        transport: Transport.TCP,
+        options: {
+          host: configService.config.host,
+          port: configService.config.tokenPort,
+        },
+      }),
       inject: [ConfigService],
     },
     {
       provide: 'PERMISSION_SERVICE',
-      useFactory: (configService: ConfigService) => {
-        return ClientProxyFactory.create({
-          transport: Transport.TCP,
-          options: {
-            host: configService.config.host,
-            port: configService.config.permissionPort,
-          },
-        });
-      },
+      useFactory: (configService: ConfigService) => ClientProxyFactory.create({
+        transport: Transport.TCP,
+        options: {
+          host: configService.config.host,
+          port: configService.config.permissionPort,
+        },
+      }),
       inject: [ConfigService],
     },
     {

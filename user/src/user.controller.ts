@@ -1,6 +1,6 @@
 import { Controller, HttpStatus } from '@nestjs/common';
-import { UserService } from './user.service';
 import { MessagePattern } from '@nestjs/microservices';
+import { UserService } from './user.service';
 import { IUserResponse } from './interfaces/user-response.interface';
 
 @Controller()
@@ -23,7 +23,7 @@ export class UserController {
       return {
         status: HttpStatus.OK,
         message: 'User found',
-        data: user
+        data: user,
       };
     } catch (error: any) {
       return {
@@ -47,7 +47,7 @@ export class UserController {
       return {
         status: HttpStatus.OK,
         message: 'User found',
-        data: user
+        data: user,
       };
     } catch (error: any) {
       return {
@@ -71,7 +71,7 @@ export class UserController {
       return {
         status: HttpStatus.CREATED,
         message: 'User created',
-        data: user
+        data: user,
       };
     } catch (error: any) {
       return {

@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
-import { UserModule } from './user.module';
 import { TcpOptions, Transport } from '@nestjs/microservices';
+import { UserModule } from './user.module';
 import { ConfigService } from './config/config.service';
 
 async function bootstrap() {

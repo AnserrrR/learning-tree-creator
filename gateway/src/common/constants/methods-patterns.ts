@@ -22,4 +22,4 @@ export const MethodsPatterns = {
    * Permission service methods
    */
   checkPermissions: 'permissions_check',
-}
+};

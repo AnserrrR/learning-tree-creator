@@ -6,14 +6,14 @@ import { UserPermissions, AdminPermissions } from './permissions';
 @Injectable()
 export class PermissionService {
   public check(user: IUser, permissions: string[] | string): boolean {
-    if (typeof permissions === 'string') {
-      permissions = [permissions];
-    }
+    const permissionsArray = Array.isArray(permissions)
+      ? permissions
+      : [permissions];
 
     if (user.role === UserRoleEnum.Admin) {
-      return permissions.every((permission) => AdminPermissions.includes(permission));
+      return permissionsArray.every((permission) => AdminPermissions.includes(permission));
     }
 
-    return permissions.every((permission) => UserPermissions.includes(permission));
+    return permissionsArray.every((permission) => UserPermissions.includes(permission));
   }
 }

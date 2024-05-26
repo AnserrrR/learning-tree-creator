@@ -1,13 +1,15 @@
-import { CanActivate, ExecutionContext, HttpStatus, Inject } from '@nestjs/common';
+import {
+  CanActivate, ExecutionContext, HttpStatus, Inject,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ClientProxy } from '@nestjs/microservices';
-import { METADATA_PUBLIC_KEY } from '../decorators/public.decorator';
 import { firstValueFrom } from 'rxjs';
+import { GraphQLError } from 'graphql/error';
+import { GqlExecutionContext } from '@nestjs/graphql';
+import { METADATA_PUBLIC_KEY } from '../decorators/public.decorator';
 import { MethodsPatterns } from '../../common/constants/methods-patterns';
 import { IBaseResponse } from '../../common/interfaces/base-response.interface';
-import { GraphQLError } from 'graphql/error';
 import { User } from '../objects/user.object';
-import { GqlExecutionContext } from '@nestjs/graphql';
 import { ICurrentAuth } from '../interfaces/current-auth.interface';
 
 export class AuthorizationGuard implements CanActivate {
@@ -29,11 +31,11 @@ export class AuthorizationGuard implements CanActivate {
 
     const request = GqlExecutionContext.create(context).getContext().req;
 
-    const token = request.headers.authorization?.replace('Bearer ', '') || ''
+    const token = request.headers.authorization?.replace('Bearer ', '') || '';
     const tokenResponse = await firstValueFrom(
       this.tokenService.send<IBaseResponse<{ userId: string }>>(
         MethodsPatterns.decodeToken,
-        { token }
+        { token },
       ),
     );
 
@@ -51,7 +53,7 @@ export class AuthorizationGuard implements CanActivate {
     const userResponse = await firstValueFrom(
       this.userService.send<IBaseResponse<User>>(
         MethodsPatterns.getUserById,
-        { id: tokenResponse.data.userId }
+        { id: tokenResponse.data.userId },
       ),
     );
 
@@ -68,7 +70,7 @@ export class AuthorizationGuard implements CanActivate {
     request.user = {
       user: userResponse.data,
       token,
-    } as ICurrentAuth
+    } as ICurrentAuth;
 
     return true;
   }

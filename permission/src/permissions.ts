@@ -11,8 +11,8 @@ export const UserPermissions = [
   'token_create',
   'token_delete',
   'token_decode',
-]
+];
 
 export const AdminPermissions = [
   ...UserPermissions,
-]
+];

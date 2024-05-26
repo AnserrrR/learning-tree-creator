@@ -1,11 +1,13 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args, Mutation, Query, Resolver,
+} from '@nestjs/graphql';
 import { ClientProxy } from '@nestjs/microservices';
 import { HttpStatus, Inject } from '@nestjs/common';
+import { firstValueFrom } from 'rxjs';
+import { GraphQLError } from 'graphql/error';
 import { User } from './objects/user.object';
 import { MethodsPatterns } from '../common/constants/methods-patterns';
 import { IBaseResponse } from '../common/interfaces/base-response.interface';
-import { firstValueFrom } from 'rxjs';
-import { GraphQLError } from 'graphql/error';
 import { Public } from './decorators/public.decorator';
 import { CurrentAuth } from './decorators/current-auth.decorator';
 import { MethodPermissions } from './decorators/method-permissions.decorator';
@@ -42,7 +44,7 @@ export class AuthResolver {
     const tokenResponse = await firstValueFrom(
       this.tokenService.send<IBaseResponse<{ token: string }>>(
         MethodsPatterns.createToken,
-        { userId: userResponse.data.id }
+        { userId: userResponse.data.id },
       ),
     );
     if (tokenResponse.status !== HttpStatus.OK || !tokenResponse.data) {
@@ -64,7 +66,7 @@ export class AuthResolver {
     const userResponse = await firstValueFrom(
       this.userService.send<IBaseResponse<User>>(
         MethodsPatterns.getUserByCredentials,
-        { email, password }
+        { email, password },
       ),
     );
     if (userResponse.status !== HttpStatus.OK || !userResponse.data) {
@@ -81,7 +83,7 @@ export class AuthResolver {
     const tokenResponse = await firstValueFrom(
       this.tokenService.send<IBaseResponse<{ token: string }>>(
         MethodsPatterns.createToken,
-        { userId: userResponse.data.id }
+        { userId: userResponse.data.id },
       ),
     );
     if (tokenResponse.status !== HttpStatus.OK || !tokenResponse.data) {

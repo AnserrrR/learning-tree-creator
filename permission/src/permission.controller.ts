@@ -1,6 +1,6 @@
 import { Controller, HttpStatus } from '@nestjs/common';
-import { PermissionService } from './permission.service';
 import { MessagePattern } from '@nestjs/microservices';
+import { PermissionService } from './permission.service';
 import { IUser } from './interfaces/user.interface';
 import { IBaseResponse } from './common/interfaces/base-response.interface';
 
@@ -25,6 +25,6 @@ export class PermissionController {
       status: isAllowed ? HttpStatus.OK : HttpStatus.FORBIDDEN,
       message: isAllowed ? 'Success' : 'Forbidden',
       data: isAllowed,
-    }
+    };
   }
 }

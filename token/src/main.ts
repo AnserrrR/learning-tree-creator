@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
+import { TcpOptions, Transport } from '@nestjs/microservices';
 import { TokenModule } from './token.module';
 import { ConfigService } from './config/config.service';
-import { TcpOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const { config: { port, host, nodeEnv } } = new ConfigService();

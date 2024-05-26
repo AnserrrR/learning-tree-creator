@@ -1,13 +1,15 @@
-import { CanActivate, ExecutionContext, HttpStatus, Inject } from '@nestjs/common';
+import {
+  CanActivate, ExecutionContext, HttpStatus, Inject,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Reflector } from '@nestjs/core';
-import { METADATA_PERMISSIONS_KEY } from '../decorators/method-permissions.decorator';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { firstValueFrom } from 'rxjs';
+import { GraphQLError } from 'graphql/error';
+import { METADATA_PERMISSIONS_KEY } from '../decorators/method-permissions.decorator';
 import { ICurrentAuth } from '../interfaces/current-auth.interface';
 import { MethodsPatterns } from '../../common/constants/methods-patterns';
 import { IBaseResponse } from '../../common/interfaces/base-response.interface';
-import { firstValueFrom } from 'rxjs';
-import { GraphQLError } from 'graphql/error';
 import { METADATA_PUBLIC_KEY } from '../decorators/public.decorator';
 
 export class PermissionGuard implements CanActivate {
@@ -45,7 +47,7 @@ export class PermissionGuard implements CanActivate {
         MethodsPatterns.checkPermissions,
         {
           user: currentAuth.user,
-          permissions
+          permissions,
         },
       ),
     );

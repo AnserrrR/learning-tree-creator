@@ -1,8 +1,8 @@
-import { Controller } from '@nestjs/common';
+import { Controller, HttpStatus } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
 import { TokenService } from './token.service';
 import { ITokenCreateResponse } from './interfaces/token-create-response.interface';
-import { MessagePattern } from '@nestjs/microservices';
-import { HttpStatus } from '@nestjs/common';
+
 import { IBaseResponse } from './common/interfaces/base-response.interface';
 import { ITokensDecodeResponse } from './interfaces/token-decode-response.interface';
 
@@ -14,7 +14,6 @@ export class TokenController {
 
   @MessagePattern('token_create')
   public async createToken(data: { userId: string }): Promise<ITokenCreateResponse> {
-
     if (!data?.userId) {
       return {
         status: HttpStatus.BAD_REQUEST,
@@ -22,7 +21,7 @@ export class TokenController {
       };
     }
     try {
-      const { token} = await this.tokenService.create(data.userId);
+      const { token } = await this.tokenService.create(data.userId);
       return {
         status: HttpStatus.OK,
         data: { token },

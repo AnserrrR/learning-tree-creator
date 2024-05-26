@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from './config/config.service';
 import jwt from 'jsonwebtoken';
+import { ConfigService } from './config/config.service';
 import { TokenEntity } from './entites/token.entity';
 
 @Injectable()
@@ -19,7 +19,6 @@ export class TokenService {
 
     return TokenEntity.create({ userId, token }).save();
   }
-
 
   /**
    * Delete a JWT token for the given user ID.

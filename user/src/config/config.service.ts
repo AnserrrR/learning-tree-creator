@@ -4,8 +4,7 @@ import * as process from 'process';
 import type { ReadonlyDeep } from 'type-fest';
 import { Injectable, Logger } from '@nestjs/common';
 import { set, values } from 'lodash';
-import ms from 'ms';
-import { joi, vercelMsValidator } from '../common/constants/joi-configured';
+import { joi } from '../common/constants/joi-configured';
 import { NodeEnv } from './node-env.enum';
 
 /**
