@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { PaletteMode } from '@mui/material';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
@@ -23,8 +24,8 @@ interface HeaderProps {
   toggleColorMode: () => void;
 }
 
-function Header({mode, toggleColorMode}: HeaderProps) {
-  const [open, setOpen] = React.useState(false);
+const Header = ({mode, toggleColorMode}: HeaderProps) => {
+  const [open, setOpen] = useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -87,14 +88,10 @@ function Header({mode, toggleColorMode}: HeaderProps) {
                 px: 0,
               }}
             >
-              <img
-                src={
-                  'https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg'
-                }
-                style={logoStyle}
-                alt="logo of sitemark"
-              />
               <Box sx={{display: {xs: 'none', md: 'flex'}}}>
+                <Typography variant="h6" component="div" color="text.primary" px="15px">
+                  LearningTreeCreator
+                </Typography>
                 <MenuItem
                   onClick={() => scrollToSection('features')}
                   sx={{py: '6px', px: '12px'}}
@@ -241,6 +238,6 @@ function Header({mode, toggleColorMode}: HeaderProps) {
       </AppBar>
     </div>
   );
-}
+};
 
 export default Header;

@@ -1,45 +1,159 @@
 import {
-  addEdge,
   Background,
-  BackgroundVariant, Connection,
-  Controls, Edge, Node,
-  MiniMap,
+  BackgroundVariant,
+  Controls, getConnectedEdges, getOutgoers,
+  MarkerType,
+  MiniMap, NodeChange,
+  OnConnectEnd,
+  OnConnectStart,
+  Position,
   ReactFlow,
   useEdgesState,
-  useNodesState, Panel
+  useNodesState,
+  useReactFlow
 } from 'reactflow';
+import { useCallback, useMemo, useRef } from 'react';
+import { v4 } from 'uuid';
+import { initialEdges, initialNodes } from './initial-nodes';
+import ChapterNode from './ChapterNode';
+import SectionNode from './SectionNode';
+import { isNil } from 'lodash';
+import { INodeData } from './node-data.interface';
 
 import 'reactflow/dist/style.css';
-import { useCallback } from 'react';
 
-const initialNodes: Node[] = [
-  { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-  { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-];
-const initialEdges: Edge[] = [
-  { id: 'e1-2', source: '1', target: '2' },
-];
+const Flow = () => {
+  const [
+    nodes,
+    setNodes,
+    onNodesChange,
+  ] = useNodesState<INodeData>(initialNodes);
+  const [
+    edges,
+    setEdges,
+  ] = useEdgesState(initialEdges);
+  const nodeTypes = useMemo(() => ({
+    chapterNode: ChapterNode,
+    sectionNode: SectionNode,
+  }), []);
 
-function Flow() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const connectingNodeProps = useRef<{
+    nodeId: string | null;
+    handleId: string | null;
+  } | null>(null);
+  const { screenToFlowPosition, getNode } = useReactFlow<INodeData>();
 
-  const onConnect = useCallback(
-    (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
+  const onConnectStart = useCallback<OnConnectStart>((_, { nodeId, handleId }) => {
+    connectingNodeProps.current = { nodeId, handleId };
+  }, []);
+
+  const onConnectEnd = useCallback<OnConnectEnd>(
+    (event) => {
+      if (isNil(connectingNodeProps.current?.nodeId)) return;
+
+      if (event instanceof TouchEvent) {
+        return;
+      }
+
+      const targetIsPane =
+        event.target instanceof HTMLElement
+        && event.target.classList.contains('react-flow__pane');
+
+      if (targetIsPane) {
+        const nodeId = v4();
+        const edgeId = v4();
+        const nodeProps = {
+          id: nodeId,
+          position: screenToFlowPosition({
+            x: event.clientX,
+            y: event.clientY,
+          }),
+        };
+        const edgeProps = {
+          id: edgeId,
+          source: connectingNodeProps.current!.nodeId!,
+          target: nodeId,
+          sourceHandle: connectingNodeProps.current!.handleId,
+          markerEnd: { type: MarkerType.Arrow, height: 20, width: 20 },
+        }
+
+        if (
+          connectingNodeProps.current!.handleId === Position.Bottom
+          && nodes.find((node) => node.id === connectingNodeProps.current!.nodeId)?.type === 'chapterNode'
+        ) {
+          setNodes((nds) => nds.concat({
+            ...nodeProps,
+            data: { label: `Chapter ${nodeId}` },
+            type: 'chapterNode',
+          }));
+          setEdges((eds) =>
+            eds.concat({
+              ...edgeProps,
+              targetHandle: Position.Top,
+            }),
+          );
+          return;
+        }
+
+        const targetPosition = getTargetHandle(connectingNodeProps.current!.handleId as Position);
+
+
+        setNodes((nds) => nds.concat({
+          id: nodeId,
+          position: screenToFlowPosition({
+            x: event.clientX,
+            y: event.clientY,
+          }),
+          data: { label: `Section ${nodeId}` },
+          targetPosition: targetPosition,
+          type: 'sectionNode',
+        }));
+        setEdges((eds) =>
+          eds.concat({
+            ...edgeProps,
+            targetHandle: targetPosition,
+            style: { strokeDasharray: '5, 5'}
+          }),
+        );
+      }
+    },
+    [nodes, screenToFlowPosition, setEdges, setNodes],
   );
 
+  const handleNodesChange = useCallback((changes: NodeChange[]) => {
+    const nextChanges = changes.reduce((acc, change) => {
+      if (change.type === 'remove') {
+        const node = getNode(change.id);
+
+        if (node && !(getOutgoers(node, nodes, edges).length > 0)) {
+          return [...acc, change];
+        }
+
+        return acc;
+      }
+
+      return [...acc, change];
+    }, [] as NodeChange[])
+
+    onNodesChange(nextChanges);
+  }, [edges, getNode, nodes, onNodesChange]);
+
   return (
-      <div style={{ width: '100vw', height: '100vh' }}>
+      <div className="tree-flow" style={{ width: '100vw', height: '100vh' }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
-          onConnect={onConnect}
-          onEdgesChange={onEdgesChange}
-          onNodesChange={onNodesChange}
+          onConnectStart={onConnectStart}
+          onConnectEnd={onConnectEnd}
+          onNodesChange={handleNodesChange}
+          nodeTypes={nodeTypes}
           fitView={true}
+          fitViewOptions={{ padding: 0.3 }}
+          nodeOrigin={[0.5, 0.5]}
         >
-          <Controls/>
+          <Controls
+            fitViewOptions={{ padding: 0.3 }}
+          />
           <MiniMap/>
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         </ReactFlow>
@@ -47,3 +161,16 @@ function Flow() {
   );
 }
 export default Flow;
+
+const getTargetHandle = (sourceHandle: Position): Position => {
+  switch (sourceHandle) {
+    case Position.Left:
+      return Position.Right;
+    case Position.Right:
+      return Position.Left;
+    case Position.Top:
+      return Position.Bottom;
+    case Position.Bottom:
+      return Position.Top;
+  }
+}
