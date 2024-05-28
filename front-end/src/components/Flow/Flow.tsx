@@ -22,7 +22,11 @@ import { INodeData } from './node-data.interface';
 
 import 'reactflow/dist/style.css';
 
+/**
+ * Flow component
+ */
 const Flow = () => {
+  // Nodes and edges state
   const [
     nodes,
     setNodes,
@@ -32,100 +36,129 @@ const Flow = () => {
     edges,
     setEdges,
   ] = useEdgesState(initialEdges);
+
+  // Node types
   const nodeTypes = useMemo(() => ({
     chapterNode: ChapterNode,
     sectionNode: SectionNode,
   }), []);
 
+  // Count sections and chapters
+  const [sectionsCount, chaptersCount] = useMemo(() => {
+    const sections = nodes.filter((node) => node.type === 'sectionNode');
+    const chapters = nodes.filter((node) => node.type === 'chapterNode');
+    return [sections.length, chapters.length];
+  }, [nodes]);
+
+  // Connecting node props
   const connectingNodeProps = useRef<{
     nodeId: string | null;
     handleId: string | null;
   } | null>(null);
+
+  // React Flow hooks
   const { screenToFlowPosition, getNode } = useReactFlow<INodeData>();
 
+  // On connect start
   const onConnectStart = useCallback<OnConnectStart>((_, { nodeId, handleId }) => {
     connectingNodeProps.current = { nodeId, handleId };
   }, []);
 
+  // On connect end. Create new section or chapter node
   const onConnectEnd = useCallback<OnConnectEnd>(
     (event) => {
-      if (isNil(connectingNodeProps.current?.nodeId)) return;
+      const sourceNodeId = connectingNodeProps.current?.nodeId;
+      const sourceHandleId = connectingNodeProps.current?.handleId;
 
-      if (event instanceof TouchEvent) {
-        return;
-      }
+      if (isNil(sourceNodeId)) return;
+
+      if (event instanceof TouchEvent) return;
 
       const targetIsPane =
         event.target instanceof HTMLElement
         && event.target.classList.contains('react-flow__pane');
 
-      if (targetIsPane) {
-        const nodeId = v4();
-        const edgeId = v4();
-        const nodeProps = {
-          id: nodeId,
-          position: screenToFlowPosition({
-            x: event.clientX,
-            y: event.clientY,
-          }),
-        };
-        const edgeProps = {
-          id: edgeId,
-          source: connectingNodeProps.current!.nodeId!,
-          target: nodeId,
-          sourceHandle: connectingNodeProps.current!.handleId,
-          markerEnd: { type: MarkerType.Arrow, height: 20, width: 20 },
-        }
+      if (!targetIsPane) return;
 
-        if (
-          connectingNodeProps.current!.handleId === Position.Bottom
-          && nodes.find((node) => node.id === connectingNodeProps.current!.nodeId)?.type === 'chapterNode'
-        ) {
-          setNodes((nds) => nds.concat({
-            ...nodeProps,
-            data: { label: `Chapter ${nodeId}` },
-            type: 'chapterNode',
-          }));
-          setEdges((eds) =>
-            eds.concat({
-              ...edgeProps,
-              targetHandle: Position.Top,
-            }),
-          );
-          return;
-        }
+      const nodeId = v4();
+      const edgeId = v4();
+      const nodeProps = {
+        id: nodeId,
+        position: screenToFlowPosition({
+          x: event.clientX,
+          y: event.clientY,
+        }),
+      };
+      const edgeProps = {
+        id: edgeId,
+        source: sourceNodeId,
+        target: nodeId,
+        sourceHandle: sourceHandleId,
+        markerEnd: {type: MarkerType.Arrow, height: 20, width: 20},
+      }
 
-        const targetPosition = getTargetHandle(connectingNodeProps.current!.handleId as Position);
-
+      // Create chapter node
+      if (
+        sourceHandleId === Position.Bottom
+        && nodes.find((node) => {
+          return node.id === sourceNodeId;
+        })?.type === 'chapterNode'
+      ) {
+        // Prevent creating multiple chapters from the same chapter
+        if (edges.some((edge) => {
+          return edge.source === sourceNodeId
+            && edge.sourceHandle === Position.Bottom;
+        })) return;
 
         setNodes((nds) => nds.concat({
-          id: nodeId,
-          position: screenToFlowPosition({
-            x: event.clientX,
-            y: event.clientY,
-          }),
-          data: { label: `Section ${nodeId}` },
-          targetPosition: targetPosition,
-          type: 'sectionNode',
+          ...nodeProps,
+          data: {label: `Chapter ${chaptersCount + 1}`},
+          type: 'chapterNode',
         }));
         setEdges((eds) =>
           eds.concat({
             ...edgeProps,
-            targetHandle: targetPosition,
-            style: { strokeDasharray: '5, 5'}
+            targetHandle: Position.Top,
           }),
         );
+        return;
       }
+
+      // Create section node
+      const targetPosition = getTargetHandle(sourceHandleId as Position);
+      setNodes((nds) => nds.concat({
+        id: nodeId,
+        position: screenToFlowPosition({
+          x: event.clientX,
+          y: event.clientY,
+        }),
+        data: {label: `Section ${sectionsCount + 1}`},
+        targetPosition: targetPosition,
+        type: 'sectionNode',
+      }));
+      setEdges((eds) =>
+        eds.concat({
+          ...edgeProps,
+          targetHandle: targetPosition,
+          style: {strokeDasharray: '5, 5'}
+        }),
+      );
     },
-    [nodes, screenToFlowPosition, setEdges, setNodes],
+    [screenToFlowPosition, nodes, setNodes, setEdges, edges, chaptersCount, sectionsCount],
   );
 
+  // Handle nodes change. Remove node if it has no outgoers
   const handleNodesChange = useCallback((changes: NodeChange[]) => {
     const nextChanges = changes.reduce((acc, change) => {
       if (change.type === 'remove') {
         const node = getNode(change.id);
 
         if (node && !(getOutgoers(node, nodes, edges).length > 0)) {
+          // Remove connected edges
+          setEdges((eds) => {
+            return eds.filter((edge) => edge.target !== change.id);
+          });
+
           return [...acc, change];
         }
 
@@ -136,7 +169,7 @@ const Flow = () => {
     }, [] as NodeChange[])
 
     onNodesChange(nextChanges);
-  }, [edges, getNode, nodes, onNodesChange]);
+  }, [edges, getNode, nodes, onNodesChange, setEdges]);
 
   return (
       <div className="tree-flow" style={{ width: '100vw', height: '100vh' }}>
@@ -162,6 +195,10 @@ const Flow = () => {
 }
 export default Flow;
 
+/**
+ * Get target handle
+ * @param sourceHandle Source handle position
+ */
 const getTargetHandle = (sourceHandle: Position): Position => {
   switch (sourceHandle) {
     case Position.Left:

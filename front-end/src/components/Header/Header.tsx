@@ -24,7 +24,7 @@ interface HeaderProps {
   toggleColorMode: () => void;
 }
 
-const Header = ({mode, toggleColorMode}: HeaderProps) => {
+const Header  = ({mode, toggleColorMode}: HeaderProps) => {
   const [open, setOpen] = useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {

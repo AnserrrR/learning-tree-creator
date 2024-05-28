@@ -10,7 +10,7 @@ const SectionNode = (props: NodeProps<INodeData>) => (
       padding: '5px',
       border: '1px solid #ccc',
       borderRadius: '5px',
-      background: '#ffed59',
+      background: '#c1f6f6',
     }}>
     {
       Object.values(Position).map((value) => {

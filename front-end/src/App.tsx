@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import { ReactFlowProvider } from 'reactflow';
 
 import './App.css';
+import TreePanel from './components/TreePanel/TreePanel';
 
 const App = () => {
   const [mode, setMode] = useState<PaletteMode>('light');
@@ -18,6 +19,7 @@ const App = () => {
     <ThemeProvider theme={defaultTheme}>
       <ReactFlowProvider>
         <Header mode={mode} toggleColorMode={toggleColorMode} />
+        <TreePanel />
         <Box sx={{ bgcolor: 'background.default'}}>
           <Flow />
         </Box>
