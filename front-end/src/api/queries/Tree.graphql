@@ -1,0 +1,10 @@
+query GetTreeById($id: UUID!) {
+    getTreeById(id: $id) {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        name
+        description
+    }
+}

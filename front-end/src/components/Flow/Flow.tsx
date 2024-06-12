@@ -21,11 +21,25 @@ import { isNil } from 'lodash';
 import { INodeData } from './node-data.interface';
 
 import 'reactflow/dist/style.css';
+import { useGetTreeByIdQuery } from '../../api/generated/graphql';
+import { AccessToken } from '../../api/access-token';
 
 /**
  * Flow component
  */
 const Flow = () => {
+  const Tree = useGetTreeByIdQuery({
+    context: {
+      headers: {
+        Authorization: AccessToken,
+      },
+    },
+    variables: {
+      id: '9354c51e-2cb0-491f-99f2-2841c530ea15',
+    },
+  }).data?.getTreeById;
+
+
   // Nodes and edges state
   const [
     nodes,

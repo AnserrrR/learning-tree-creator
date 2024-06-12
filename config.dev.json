@@ -5,10 +5,10 @@
   "permissionPort": 5002,
   "tokenPort": 5003,
   "userPort": 5004,
-  "filesUrl": "../files",
-  "imagesUrl": "../images",
+  "filesPort": 5005,
+  "frontPort": 3000,
   "jwtToken": {
-    "expiresIn": "1y"
+    "expiresIn": "1d"
   },
   "s3": {
     "bucketName": "learning-tree-creator",
@@ -16,3 +16,5 @@
     "port": 9002
   }
 }
+
+

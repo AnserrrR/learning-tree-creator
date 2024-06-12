@@ -24,7 +24,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=dev
-      - POSTGRES_MULTIPLE_DATABASES="learning-tree-creator","users","token"
+      - POSTGRES_MULTIPLE_DATABASES="learning-tree-creator","users","token","files"
     volumes:
       - ./dev-db-data:/var/lib/postgresql/data
       - ./backups:/opt/backups
