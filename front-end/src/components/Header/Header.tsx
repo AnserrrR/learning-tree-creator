@@ -11,6 +11,8 @@ import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
+import ParkIcon from '@mui/icons-material/Park';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ToggleColorMode from './ToggleColorMode';
 
 const logoStyle = {
@@ -89,49 +91,12 @@ const Header  = ({mode, toggleColorMode}: HeaderProps) => {
               }}
             >
               <Box sx={{display: {xs: 'none', md: 'flex'}}}>
+                <Button>
+                  <ParkIcon/>
+                </Button>
                 <Typography variant="h6" component="div" color="text.primary" px="15px">
                   LearningTreeCreator
                 </Typography>
-                <MenuItem
-                  onClick={() => scrollToSection('features')}
-                  sx={{py: '6px', px: '12px'}}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    Features
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => scrollToSection('testimonials')}
-                  sx={{py: '6px', px: '12px'}}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    Testimonials
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => scrollToSection('highlights')}
-                  sx={{py: '6px', px: '12px'}}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    Highlights
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => scrollToSection('pricing')}
-                  sx={{py: '6px', px: '12px'}}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    Pricing
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => scrollToSection('faq')}
-                  sx={{py: '6px', px: '12px'}}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    FAQ
-                  </Typography>
-                </MenuItem>
               </Box>
             </Box>
             <Box
@@ -142,25 +107,28 @@ const Header  = ({mode, toggleColorMode}: HeaderProps) => {
               }}
             >
               <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode}/>
-              <Button
-                color="primary"
-                variant="text"
-                size="small"
-                component="a"
-                href="/material-ui/getting-started/templates/sign-in/"
-                target="_blank"
-              >
-                Sign in
-              </Button>
-              <Button
-                color="primary"
-                variant="contained"
-                size="small"
-                component="a"
-                href="/material-ui/getting-started/templates/sign-up/"
-                target="_blank"
-              >
-                Sign up
+              {/*<Button*/}
+              {/*  color="primary"*/}
+              {/*  variant="text"*/}
+              {/*  size="small"*/}
+              {/*  component="a"*/}
+              {/*  href="/material-ui/getting-started/templates/sign-in/"*/}
+              {/*  target="_blank"*/}
+              {/*>*/}
+              {/*  Sign in*/}
+              {/*</Button>*/}
+              {/*<Button*/}
+              {/*  color="primary"*/}
+              {/*  variant="contained"*/}
+              {/*  size="small"*/}
+              {/*  component="a"*/}
+              {/*  href="/material-ui/getting-started/templates/sign-up/"*/}
+              {/*  target="_blank"*/}
+              {/*>*/}
+              {/*  Sign up*/}
+              {/*</Button>*/}
+              <Button startIcon={<KeyboardArrowDownIcon/>} variant={'outlined'}>
+                shiparev2002
               </Button>
             </Box>
             <Box sx={{display: {sm: '', md: 'none'}}}>

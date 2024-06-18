@@ -4,7 +4,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-const TreePanel: React.FC = () => {
+const TreePanel = () => {
   return (
     <>
       <Container maxWidth="lg">

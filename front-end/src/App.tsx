@@ -6,7 +6,9 @@ import Box from '@mui/material/Box';
 import { ReactFlowProvider } from 'reactflow';
 
 import './App.css';
-import TreePanel from './components/TreePanel/TreePanel';
+import AuthDialogs from './components/Auth/AuthDialogs';
+import AllTreesCatalog from './components/Catalog/AllTreesCatalog';
+import UserTreesCatalog from './components/Catalog/UserTreesCatalog';
 
 const App = () => {
   const [mode, setMode] = useState<PaletteMode>('light');
@@ -19,9 +21,11 @@ const App = () => {
     <ThemeProvider theme={defaultTheme}>
       <ReactFlowProvider>
         <Header mode={mode} toggleColorMode={toggleColorMode} />
-        <TreePanel />
+        {/*<AuthDialogs></AuthDialogs>*/}
+        {/*<AllTreesCatalog></AllTreesCatalog>*/}
         <Box sx={{ bgcolor: 'background.default'}}>
-          <Flow />
+          {/*<Flow />*/}
+          <UserTreesCatalog/>
         </Box>
       </ReactFlowProvider>
     </ThemeProvider>

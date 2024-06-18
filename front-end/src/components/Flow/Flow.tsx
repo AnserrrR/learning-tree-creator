@@ -1,9 +1,11 @@
 import {
   Background,
   BackgroundVariant,
-  Controls, getConnectedEdges, getOutgoers,
+  Controls,
+  getOutgoers,
   MarkerType,
-  MiniMap, NodeChange,
+  MiniMap,
+  NodeChange,
   OnConnectEnd,
   OnConnectStart,
   Position,
@@ -12,17 +14,19 @@ import {
   useNodesState,
   useReactFlow
 } from 'reactflow';
-import { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { v4 } from 'uuid';
 import { initialEdges, initialNodes } from './initial-nodes';
 import ChapterNode from './ChapterNode';
 import SectionNode from './SectionNode';
 import { isNil } from 'lodash';
 import { INodeData } from './node-data.interface';
+import { AccessToken } from '../../api/access-token';
+import { useGetTreeByIdQuery } from '../../api/generated/graphql';
+import SectionDialog from '../Section/SectionDialog';
 
 import 'reactflow/dist/style.css';
-import { useGetTreeByIdQuery } from '../../api/generated/graphql';
-import { AccessToken } from '../../api/access-token';
+import TreePanel from './TreePanel';
 
 /**
  * Flow component
@@ -187,6 +191,7 @@ const Flow = () => {
 
   return (
       <div className="tree-flow" style={{ width: '100vw', height: '100vh' }}>
+        <TreePanel />
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -202,6 +207,7 @@ const Flow = () => {
             fitViewOptions={{ padding: 0.3 }}
           />
           <MiniMap/>
+          <SectionDialog />
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         </ReactFlow>
       </div>
