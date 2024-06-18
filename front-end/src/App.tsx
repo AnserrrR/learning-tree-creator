@@ -11,6 +11,7 @@ import AllTreesCatalog from './components/Catalog/AllTreesCatalog';
 import UserTreesCatalog from './components/Catalog/UserTreesCatalog';
 import SectionDialog from './components/Section/SectionDialog';
 
+
 const App = () => {
   const [mode, setMode] = useState<PaletteMode>('light');
   const defaultTheme = createTheme({ palette: { mode } });
@@ -28,6 +29,8 @@ const App = () => {
           {/*<AllTreesCatalog></AllTreesCatalog>*/}
           {/*<AuthDialogs></AuthDialogs>*/}
           {/*<SectionDialog></SectionDialog>*/}
+          {/*<AuthDialogs></AuthDialogs>*/}
+          {/*<AllTreesCatalog></AllTreesCatalog>*/}
         </Box>
       </ReactFlowProvider>
     </ThemeProvider>
