@@ -4,6 +4,7 @@ import { ConfigModule } from './config/config.module';
 import { TreeModule } from './tree/tree.module';
 import { ConfigService } from './config/config.service';
 import { AppEntities } from './app.entities';
+import { SectionModule } from './section/section.module';
 
 @Module({
   imports: [

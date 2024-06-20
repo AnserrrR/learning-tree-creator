@@ -1,5 +1,5 @@
-import { Controller, HttpStatus } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
+import { Controller, HttpStatus } from '@nestjs/common';
 import { TokenService } from './token.service';
 import { ITokenCreateResponse } from './interfaces/token-create-response.interface';
 

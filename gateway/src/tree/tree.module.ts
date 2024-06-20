@@ -21,4 +21,4 @@ import { ConfigService } from '../config/config.service';
     },
   ],
 })
-export class BackModule {}
+export class TreeModule {}

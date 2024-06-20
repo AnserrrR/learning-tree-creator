@@ -1,11 +1,33 @@
-import { Column, Entity } from 'typeorm';
+import {
+  Column, Entity, JoinColumn, OneToMany,
+} from 'typeorm';
 import { AppBaseEntity } from '../common/entities/app-base.entity';
+import { TreeNodeEntity } from '../section/entities/tree-node.entity';
 
-@Entity()
+@Entity('tree')
 export class TreeEntity extends AppBaseEntity {
-  @Column()
+  @Column('uuid')
+  authorId: string;
+
+  @Column('uuid')
+  userId: string;
+
+  @Column('uuid')
+  imageId: string;
+
+  @Column('text')
   name: string;
 
-  @Column()
-  description: string;
+  @Column('boolean')
+  isPublic: boolean;
+
+  @Column('integer')
+  chaptersCompiled: number;
+
+  @Column('text')
+  descriptionText: string;
+
+  @OneToMany(() => TreeNodeEntity, (node) => node.tree)
+  @JoinColumn()
+  nodes: TreeNodeEntity[];
 }
