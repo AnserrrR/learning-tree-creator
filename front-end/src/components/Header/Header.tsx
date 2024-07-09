@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { PaletteMode } from '@mui/material';
+import { Menu, PaletteMode } from '@mui/material';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,6 +14,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ParkIcon from '@mui/icons-material/Park';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ToggleColorMode from './ToggleColorMode';
+import UserMenu from './UserMenu';
 
 const logoStyle = {
   width: '140px',
@@ -107,29 +108,7 @@ const Header  = ({mode, toggleColorMode}: HeaderProps) => {
               }}
             >
               <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode}/>
-              {/*<Button*/}
-              {/*  color="primary"*/}
-              {/*  variant="text"*/}
-              {/*  size="small"*/}
-              {/*  component="a"*/}
-              {/*  href="/material-ui/getting-started/templates/sign-in/"*/}
-              {/*  target="_blank"*/}
-              {/*>*/}
-              {/*  Sign in*/}
-              {/*</Button>*/}
-              {/*<Button*/}
-              {/*  color="primary"*/}
-              {/*  variant="contained"*/}
-              {/*  size="small"*/}
-              {/*  component="a"*/}
-              {/*  href="/material-ui/getting-started/templates/sign-up/"*/}
-              {/*  target="_blank"*/}
-              {/*>*/}
-              {/*  Sign up*/}
-              {/*</Button>*/}
-              <Button startIcon={<KeyboardArrowDownIcon/>} variant={'outlined'}>
-                shiparev2002
-              </Button>
+              <UserMenu/>
             </Box>
             <Box sx={{display: {sm: '', md: 'none'}}}>
               <Button

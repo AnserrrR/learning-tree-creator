@@ -25,7 +25,7 @@ export class TreeEntity extends AppBaseEntity {
   chaptersCompiled: number;
 
   @Column('text')
-  descriptionText: string;
+  description: string;
 
   @OneToMany(() => TreeNodeEntity, (node) => node.tree)
   @JoinColumn()

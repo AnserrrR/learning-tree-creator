@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { useAuth } from '../../context/AuthContext';
+import { useLoginMutation, useRegisterMutation } from '../../api/generated/graphql';
+import { useNavigate } from 'react-router-dom';
 
 interface RegisterDialogProps {
   open: boolean;
@@ -10,12 +13,27 @@ interface RegisterDialogProps {
 const RegisterDialog= ({ open, onClose, onSwitchToLogin }: RegisterDialogProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const [registerMutation] = useRegisterMutation();
 
-  const handleRegister = () => {
-    // Handle registration logic here
-    console.log(`Registering with username: ${username} and password: ${password}`);
-    onClose(); // Close dialog after registration
-  };
+  const handleRegister = useCallback(async () => {
+    const registerResult = await registerMutation({
+      variables: {
+        email: username,
+        password: password,
+      },
+    });
+    if (registerResult.errors || !registerResult.data) {
+      console.error(registerResult.errors);
+      return;
+    }
+
+    login(registerResult.data?.register);
+    console.log(`Registration with email: ${username} and password: ${password}`);
+    onClose(); // Close dialog after login
+    navigate('/tree/123'); // Navigate to home page after login
+  }, [registerMutation, login, username, password, onClose]);
 
   return (
     <Dialog open={open} onClose={onClose}>

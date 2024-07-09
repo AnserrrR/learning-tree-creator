@@ -6,6 +6,7 @@ export class TreeCreateInput extends PickType(
   Tree,
   [
     'name',
-    'description'
-  ]
-){}
+    'description',
+  ],
+  InputType,
+) {}

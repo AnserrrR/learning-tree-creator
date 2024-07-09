@@ -21,9 +21,7 @@ import ChapterNode from './ChapterNode';
 import SectionNode from './SectionNode';
 import { isNil } from 'lodash';
 import { INodeData } from './node-data.interface';
-import { AccessToken } from '../../api/access-token';
 import { useGetTreeByIdQuery } from '../../api/generated/graphql';
-import SectionDialog from '../Section/SectionDialog';
 
 import 'reactflow/dist/style.css';
 import TreePanel from './TreePanel';
@@ -33,15 +31,11 @@ import TreePanel from './TreePanel';
  */
 const Flow = () => {
   const Tree = useGetTreeByIdQuery({
-    context: {
-      headers: {
-        Authorization: AccessToken,
-      },
-    },
     variables: {
       id: '9354c51e-2cb0-491f-99f2-2841c530ea15',
     },
   }).data?.getTreeById;
+  console.log(Tree);
 
 
   // Nodes and edges state
@@ -207,7 +201,6 @@ const Flow = () => {
             fitViewOptions={{ padding: 0.3 }}
           />
           <MiniMap/>
-          <SectionDialog />
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         </ReactFlow>
       </div>

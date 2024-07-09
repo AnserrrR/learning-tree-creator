@@ -1,6 +1,5 @@
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { AccessToken } from './access-token';
 
 // GraphQL endpoint
 const httpLink = new HttpLink({
@@ -9,7 +8,7 @@ const httpLink = new HttpLink({
 
 // Middleware for adding the token to the request headers
 const authLink = setContext((_, { headers }) => {
-  const token = AccessToken;
+  const token = localStorage.getItem('token');
   return {
     headers: {
       ...headers,

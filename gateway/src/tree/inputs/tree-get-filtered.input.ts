@@ -1,4 +1,6 @@
 import { InputType } from '@nestjs/graphql';
 
 @InputType()
-export class TreeGetFilteredInput {}
+export class TreeGetFilteredInput {
+  name: string;
+}

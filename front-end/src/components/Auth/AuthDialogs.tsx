@@ -5,8 +5,7 @@ import LoginDialog from './LoginDialog';
 
 const AuthDialogs = () => {
   const [openRegister, setOpenRegister] = useState(false);
-  const [openLogin, setOpenLogin] = useState(false);
-
+  const [openLogin, setOpenLogin] = useState(true);
   const handleOpenRegister = () => {
     setOpenRegister(true);
     setOpenLogin(false); // Close Login dialog if open
@@ -27,12 +26,6 @@ const AuthDialogs = () => {
 
   return (
     <>
-      <Button variant="contained" color="primary" onClick={handleOpenRegister}>
-        Register
-      </Button>
-      <Button variant="contained" color="primary" onClick={handleOpenLogin} style={{ marginLeft: '10px' }}>
-        Login
-      </Button>
       <RegisterDialog open={openRegister} onClose={handleCloseRegister} onSwitchToLogin={handleOpenLogin} />
       <LoginDialog open={openLogin} onClose={handleCloseLogin} onSwitchToRegister={handleOpenRegister} />
     </>
