@@ -20,6 +20,13 @@ export type Scalars = {
   UUID: { input: any; output: any; }
 };
 
+export type EdgeInput = {
+  sourceId: Scalars['String']['input'];
+  sourcePosition: PositionEnum;
+  targetId: Scalars['String']['input'];
+  targetPosition: PositionEnum;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createTree: Tree;
@@ -66,13 +73,55 @@ export type MutationUpdateTreeArgs = {
   input: TreeUpdateInput;
 };
 
+export type NodeFileObject = {
+  __typename?: 'NodeFileObject';
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  fileId: Scalars['String']['output'];
+  fullName: Scalars['String']['output'];
+  isImage: Scalars['Boolean']['output'];
+  node: TreeNode;
+  nodeId: Scalars['String']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
+};
+
+export type NodeLinkObject = {
+  __typename?: 'NodeLinkObject';
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  id: Scalars['UUID']['output'];
+  node: TreeNode;
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
+  url: Scalars['String']['output'];
+};
+
+/** Position of the edge */
+export enum PositionEnum {
+  Bottom = 'Bottom',
+  Left = 'Left',
+  Right = 'Right',
+  Top = 'Top'
+}
+
 export type Query = {
   __typename?: 'Query';
   /** Get user by ID */
   getCurrentUser: User;
   getFilteredTrees: Array<Tree>;
+  getFilteredUserTrees: Array<Tree>;
   getSectionById: TreeNode;
   getTreeById: Tree;
+};
+
+
+export type QueryGetFilteredTreesArgs = {
+  input: TreeGetFilteredInput;
+};
+
+
+export type QueryGetFilteredUserTreesArgs = {
+  input: TreeGetFilteredInput;
 };
 
 
@@ -88,18 +137,39 @@ export type QueryGetTreeByIdArgs = {
 export type SectionUpdateInput = {
   createdAt?: InputMaybe<Scalars['DateTimeISO']['input']>;
   deletedAt?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['UUID']['input'];
+  isComplete?: InputMaybe<Scalars['Boolean']['input']>;
+  label?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTimeISO']['input']>;
+};
+
+export type TaskObject = {
+  __typename?: 'TaskObject';
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  id: Scalars['UUID']['output'];
+  isComplete: Scalars['Boolean']['output'];
+  node: TreeNode;
+  note: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
 };
 
 export type Tree = {
   __typename?: 'Tree';
+  authorId: Scalars['String']['output'];
+  chaptersCompiled: Scalars['Float']['output'];
   createdAt: Scalars['DateTimeISO']['output'];
   deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   description: Scalars['String']['output'];
   id: Scalars['UUID']['output'];
+  imageId: Scalars['String']['output'];
+  isPublic: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
+  nodes: Array<TreeNode>;
   updatedAt: Scalars['DateTimeISO']['output'];
+  userId: Scalars['String']['output'];
 };
 
 export type TreeCreateInput = {
@@ -107,18 +177,41 @@ export type TreeCreateInput = {
   name: Scalars['String']['input'];
 };
 
+export type TreeGetFilteredInput = {
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type TreeNode = {
   __typename?: 'TreeNode';
   createdAt: Scalars['DateTimeISO']['output'];
   deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  description: Scalars['String']['output'];
+  files: Array<NodeFileObject>;
   id: Scalars['UUID']['output'];
+  isComplete: Scalars['Boolean']['output'];
+  label: Scalars['String']['output'];
+  links: Array<NodeLinkObject>;
+  positionX: Scalars['Float']['output'];
+  positionY: Scalars['Float']['output'];
+  tasks: Array<TaskObject>;
+  tree: Tree;
   updatedAt: Scalars['DateTimeISO']['output'];
+};
+
+export type TreeNodeInput = {
+  id: Scalars['UUID']['input'];
+  label: Scalars['String']['input'];
+  positionX: Scalars['Float']['input'];
+  positionY: Scalars['Float']['input'];
 };
 
 export type TreeUpdateInput = {
   description?: InputMaybe<Scalars['String']['input']>;
+  edges: Array<EdgeInput>;
   id: Scalars['UUID']['input'];
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  nodes: Array<TreeNodeInput>;
 };
 
 /** User object */
@@ -143,7 +236,14 @@ export enum UserRole {
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', email: any } };
+export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', id: any, email: any } };
+
+export type GetUserTreesQueryVariables = Exact<{
+  input: TreeGetFilteredInput;
+}>;
+
+
+export type GetUserTreesQuery = { __typename?: 'Query', getFilteredUserTrees: Array<{ __typename?: 'Tree', id: any, name: string, description: string, createdAt: any, updatedAt: any }> };
 
 export type LoginMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -173,10 +273,18 @@ export type GetTreeByIdQueryVariables = Exact<{
 
 export type GetTreeByIdQuery = { __typename?: 'Query', getTreeById: { __typename?: 'Tree', id: any, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string } };
 
+export type UpdateTreeMutationVariables = Exact<{
+  input: TreeUpdateInput;
+}>;
+
+
+export type UpdateTreeMutation = { __typename?: 'Mutation', updateTree: { __typename?: 'Tree', id: any, name: string, description: string } };
+
 
 export const GetCurrentUserDocument = gql`
     query GetCurrentUser {
   getCurrentUser {
+    id
     email
   }
 }
@@ -213,6 +321,50 @@ export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQ
 export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
 export type GetCurrentUserSuspenseQueryHookResult = ReturnType<typeof useGetCurrentUserSuspenseQuery>;
 export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
+export const GetUserTreesDocument = gql`
+    query GetUserTrees($input: TreeGetFilteredInput!) {
+  getFilteredUserTrees(input: $input) {
+    id
+    name
+    description
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetUserTreesQuery__
+ *
+ * To run a query within a React component, call `useGetUserTreesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserTreesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserTreesQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetUserTreesQuery(baseOptions: Apollo.QueryHookOptions<GetUserTreesQuery, GetUserTreesQueryVariables> & ({ variables: GetUserTreesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserTreesQuery, GetUserTreesQueryVariables>(GetUserTreesDocument, options);
+      }
+export function useGetUserTreesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserTreesQuery, GetUserTreesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserTreesQuery, GetUserTreesQueryVariables>(GetUserTreesDocument, options);
+        }
+export function useGetUserTreesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetUserTreesQuery, GetUserTreesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserTreesQuery, GetUserTreesQueryVariables>(GetUserTreesDocument, options);
+        }
+export type GetUserTreesQueryHookResult = ReturnType<typeof useGetUserTreesQuery>;
+export type GetUserTreesLazyQueryHookResult = ReturnType<typeof useGetUserTreesLazyQuery>;
+export type GetUserTreesSuspenseQueryHookResult = ReturnType<typeof useGetUserTreesSuspenseQuery>;
+export type GetUserTreesQueryResult = Apollo.QueryResult<GetUserTreesQuery, GetUserTreesQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password)
@@ -352,3 +504,38 @@ export type GetTreeByIdQueryHookResult = ReturnType<typeof useGetTreeByIdQuery>;
 export type GetTreeByIdLazyQueryHookResult = ReturnType<typeof useGetTreeByIdLazyQuery>;
 export type GetTreeByIdSuspenseQueryHookResult = ReturnType<typeof useGetTreeByIdSuspenseQuery>;
 export type GetTreeByIdQueryResult = Apollo.QueryResult<GetTreeByIdQuery, GetTreeByIdQueryVariables>;
+export const UpdateTreeDocument = gql`
+    mutation UpdateTree($input: TreeUpdateInput!) {
+  updateTree(input: $input) {
+    id
+    name
+    description
+  }
+}
+    `;
+export type UpdateTreeMutationFn = Apollo.MutationFunction<UpdateTreeMutation, UpdateTreeMutationVariables>;
+
+/**
+ * __useUpdateTreeMutation__
+ *
+ * To run a mutation, you first call `useUpdateTreeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTreeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTreeMutation, { data, loading, error }] = useUpdateTreeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateTreeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTreeMutation, UpdateTreeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTreeMutation, UpdateTreeMutationVariables>(UpdateTreeDocument, options);
+      }
+export type UpdateTreeMutationHookResult = ReturnType<typeof useUpdateTreeMutation>;
+export type UpdateTreeMutationResult = Apollo.MutationResult<UpdateTreeMutation>;
+export type UpdateTreeMutationOptions = Apollo.BaseMutationOptions<UpdateTreeMutation, UpdateTreeMutationVariables>;

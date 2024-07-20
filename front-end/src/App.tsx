@@ -11,6 +11,7 @@ import AuthDialogs from './components/Auth/AuthDialogs';
 
 
 import './App.css';
+import UserTreesCatalog from './components/Catalog/UserTreesCatalog';
 
 const App = () => {
   return (
@@ -24,7 +25,7 @@ const App = () => {
               <Route path={'/'} element={<ProtectedRoute />} >
                 <Route element={<AppLayout />}>
                   <Route path={'tree/:treeId'} element={<Flow />} />
-                  {/*<UserTreesCatalog/>*/}
+                  <Route path={'my-trees'} element={<UserTreesCatalog />} />
                   {/*<AllTreesCatalog></AllTreesCatalog>*/}
                   {/*<AuthDialogs></AuthDialogs>*/}
                   {/*<SectionDialog></SectionDialog>*/}

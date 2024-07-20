@@ -4,7 +4,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-const TreePanel = () => {
+const TreePanel = ({ onSave } : { onSave: () => {} }) => {
   return (
     <>
       <Container maxWidth="lg">
@@ -28,7 +28,7 @@ const TreePanel = () => {
             </IconButton>
           </Typography>
           <ButtonGroup variant="outlined">
-            <Button  startIcon={<SaveIcon />}>Save</Button>
+            <Button  startIcon={<SaveIcon />} onClick={onSave}>Save</Button>
             <Button><ShareIcon /></Button>
           </ButtonGroup>
         </Stack>

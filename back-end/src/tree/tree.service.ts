@@ -24,8 +24,8 @@ export class TreeService {
       where: {
         ...input.filter,
       },
-      skip: input.pagination.offset,
-      take: input.pagination.limit,
+      skip: input.pagination?.offset ?? 0,
+      take: input.pagination?.limit ?? 8,
     });
   }
 

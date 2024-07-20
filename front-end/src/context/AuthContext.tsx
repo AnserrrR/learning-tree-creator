@@ -1,7 +1,9 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect, useMemo } from 'react';
+import { jwtDecode} from 'jwt-decode';
 
 interface AuthContextType {
   token: string | null;
+  userId: string | null;
   login: (token: string) => void;
   logout: () => void;
 }
@@ -12,6 +14,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(() => {
     return localStorage.getItem('token');
   });
+  const userId = useMemo(() => {
+    if (!token) {
+      return '';
+    }
+    const { userId } = jwtDecode<{ userId: string | null }>(token);
+    return userId;
+  }, [token]);
 
   useEffect(() => {
     if (token) {
@@ -30,7 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider value={{ token, userId, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -13,6 +13,8 @@ import { TreeCreateInput } from './inputs/tree-create.input';
 import { TreeUpdateInput } from './inputs/tree-update.input';
 import { TreeNode } from './objects/tree-node.object';
 import { SectionUpdateInput } from './inputs/section-update.input';
+import { CurrentAuth } from '../auth/decorators/current-auth.decorator';
+import { User } from '../auth/objects/user.object';
 
 @Resolver()
 export class TreeResolver {
@@ -29,8 +31,20 @@ export class TreeResolver {
 
   @MethodPermissions(MethodsPatterns.getFilteredTrees)
   @Query(() => [Tree])
-  async getFilteredTrees(input: TreeGetFilteredInput): Promise<Tree[]> {
+  async getFilteredTrees(@Args('input') input: TreeGetFilteredInput): Promise<Tree[]> {
     return firstValueFrom(this.backServiceClient.send(MethodsPatterns.getFilteredTrees, input));
+  }
+
+  @MethodPermissions(MethodsPatterns.getFilteredTrees)
+  @Query(() => [Tree])
+  async getFilteredUserTrees(
+    @Args('input') input: TreeGetFilteredInput,
+    @CurrentAuth('user') user: User,
+  ): Promise<Tree[]> {
+    return firstValueFrom(this.backServiceClient.send(MethodsPatterns.getFilteredTrees, {
+      ...input,
+      userId: user.id,
+    }));
   }
 
   @MethodPermissions(MethodsPatterns.createTree)

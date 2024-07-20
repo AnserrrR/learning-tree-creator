@@ -33,7 +33,7 @@ const LoginDialog = ({ open, onClose, onSwitchToRegister }: LoginDialogProps) =>
     login(loginResult.data?.login);
     console.log(`Logging in with email: ${username} and password: ${password}`);
     onClose(); // Close dialog after login
-    navigate('/tree/123'); // Navigate to home page after login
+    navigate(`/my-trees`); // Navigate to home page after login
   }, [loginMutation, login, username, password, onClose]);
 
   return (

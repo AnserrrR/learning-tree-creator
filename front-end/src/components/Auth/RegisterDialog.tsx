@@ -13,7 +13,7 @@ interface RegisterDialogProps {
 const RegisterDialog= ({ open, onClose, onSwitchToLogin }: RegisterDialogProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
+  const { login, userId } = useAuth();
   const navigate = useNavigate();
   const [registerMutation] = useRegisterMutation();
 
@@ -32,7 +32,7 @@ const RegisterDialog= ({ open, onClose, onSwitchToLogin }: RegisterDialogProps) 
     login(registerResult.data?.register);
     console.log(`Registration with email: ${username} and password: ${password}`);
     onClose(); // Close dialog after login
-    navigate('/tree/123'); // Navigate to home page after login
+    navigate(`/my-trees`); // Navigate to home page after login
   }, [registerMutation, login, username, password, onClose]);
 
   return (

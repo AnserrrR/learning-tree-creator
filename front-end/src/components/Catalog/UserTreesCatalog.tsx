@@ -4,17 +4,14 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import SearchIcon from '@mui/icons-material/Search';
+import { useGetUserTreesQuery } from '../../api/generated/graphql';
 
-import tree from './tree_image.png';
-
-const trees = Array.from({ length: 8 }, (_, index) => ({
-  id: index + 1,
-  heading: `Tree example ${index + 1}`,
-  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  image: tree,
-}));
+import treeImage from './tree_image.png';
 
 const UserTreesCatalog = () => {
+  const userTrees = useGetUserTreesQuery({ variables: { input: {} } })
+    .data?.getFilteredUserTrees || [];
+
   return (
     <Container>
       <Box sx={{ mt: 14 }}>
@@ -43,12 +40,19 @@ const UserTreesCatalog = () => {
           </Paper>
         </Box>
         <Grid container spacing={4}>
-          {trees.map(tree => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={tree.id}>
+          {userTrees.map((tree) => (
+            <Grid
+              item
+              key={tree.id}
+              xs={12}
+              sm={6}
+              md={4}
+            >
               <TreeCard
-                image={tree.image}
-                heading={tree.heading}
+                id={tree.id}
+                heading={tree.name}
                 description={tree.description}
+                image={treeImage}
               />
             </Grid>
           ))}

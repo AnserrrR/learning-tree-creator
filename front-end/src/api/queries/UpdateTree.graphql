@@ -1,0 +1,7 @@
+mutation UpdateTree($input: TreeUpdateInput!) {
+  updateTree(input: $input) {
+      id
+      name
+      description
+  }
+}

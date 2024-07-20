@@ -1,0 +1,9 @@
+query GetUserTrees($input: TreeGetFilteredInput!) {
+  getFilteredUserTrees(input: $input) {
+    id
+    name
+    description
+    createdAt
+    updatedAt
+  }
+}

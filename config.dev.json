@@ -8,7 +8,7 @@
   "filesPort": 5005,
   "frontPort": 3000,
   "jwtToken": {
-    "expiresIn": "1d"
+    "expiresIn": "1y"
   },
   "s3": {
     "bucketName": "learning-tree-creator",

@@ -9,6 +9,9 @@ export class SectionUpdateInput extends IntersectionType(
     'positionX',
     'positionY',
     'tree',
+    'tasks',
+    'files',
+    'links',
   ])),
   InputType,
 ) {}

@@ -21,18 +21,22 @@ import ChapterNode from './ChapterNode';
 import SectionNode from './SectionNode';
 import { isNil } from 'lodash';
 import { INodeData } from './node-data.interface';
-import { useGetTreeByIdQuery } from '../../api/generated/graphql';
+import { PositionEnum, useGetTreeByIdQuery, useUpdateTreeMutation } from '../../api/generated/graphql';
+import TreePanel from './TreePanel';
+import { useParams } from 'react-router-dom';
 
 import 'reactflow/dist/style.css';
-import TreePanel from './TreePanel';
 
 /**
  * Flow component
  */
 const Flow = () => {
+  // Get tree by id
+  const { treeId} = useParams()
+
   const Tree = useGetTreeByIdQuery({
     variables: {
-      id: '9354c51e-2cb0-491f-99f2-2841c530ea15',
+      id: treeId,
     },
   }).data?.getTreeById;
   console.log(Tree);
@@ -182,6 +186,36 @@ const Flow = () => {
 
     onNodesChange(nextChanges);
   }, [edges, getNode, nodes, onNodesChange, setEdges]);
+
+  // Save tree
+  const [ updateTreeMutation  ]  = useUpdateTreeMutation();
+
+  const onSave = useCallback(() => {
+    updateTreeMutation({
+      variables: {
+        input: {
+          id: treeId,
+          nodes: nodes.map((node) => {
+            return {
+              id: node.id,
+              label: node.data.label,
+              positionX: node.position.x,
+              positionY: node.position.y,
+            }
+          }),
+          edges: edges.map((edge) => {
+            return {
+              id: edge.id,
+              sourceId: edge.source,
+              targetId: edge.target,
+              sourcePosition: edge.sourceHandle as PositionEnum,
+              targetPosition: edge.targetHandle as PositionEnum,
+            }
+          }),
+        }
+      }
+    })
+  }, []);
 
   return (
       <div className="tree-flow" style={{ width: '100vw', height: '100vh' }}>
