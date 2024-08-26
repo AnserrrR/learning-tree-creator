@@ -20,6 +20,20 @@ export type Scalars = {
   UUID: { input: any; output: any; }
 };
 
+export type Edge = {
+  __typename?: 'Edge';
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  source: TreeNode;
+  sourceId: Scalars['String']['output'];
+  sourcePosition: PositionEnum;
+  target: TreeNode;
+  targetId: Scalars['String']['output'];
+  targetPosition: PositionEnum;
+  tree: Tree;
+  updatedAt: Scalars['DateTimeISO']['output'];
+};
+
 export type EdgeInput = {
   sourceId: Scalars['String']['input'];
   sourcePosition: PositionEnum;
@@ -96,6 +110,12 @@ export type NodeLinkObject = {
   url: Scalars['String']['output'];
 };
 
+/** Node type enum */
+export enum NodeTypeEnum {
+  ChapterNode = 'ChapterNode',
+  SectionNode = 'SectionNode'
+}
+
 /** Position of the edge */
 export enum PositionEnum {
   Bottom = 'Bottom',
@@ -141,6 +161,8 @@ export type SectionUpdateInput = {
   id: Scalars['UUID']['input'];
   isComplete?: InputMaybe<Scalars['Boolean']['input']>;
   label?: InputMaybe<Scalars['String']['input']>;
+  nodeType?: InputMaybe<NodeTypeEnum>;
+  targetPosition?: InputMaybe<PositionEnum>;
   updatedAt?: InputMaybe<Scalars['DateTimeISO']['input']>;
 };
 
@@ -163,6 +185,7 @@ export type Tree = {
   createdAt: Scalars['DateTimeISO']['output'];
   deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   description: Scalars['String']['output'];
+  edges: Array<Edge>;
   id: Scalars['UUID']['output'];
   imageId: Scalars['String']['output'];
   isPublic: Scalars['Boolean']['output'];
@@ -191,8 +214,10 @@ export type TreeNode = {
   isComplete: Scalars['Boolean']['output'];
   label: Scalars['String']['output'];
   links: Array<NodeLinkObject>;
+  nodeType: NodeTypeEnum;
   positionX: Scalars['Float']['output'];
   positionY: Scalars['Float']['output'];
+  targetPosition: PositionEnum;
   tasks: Array<TaskObject>;
   tree: Tree;
   updatedAt: Scalars['DateTimeISO']['output'];
@@ -201,8 +226,10 @@ export type TreeNode = {
 export type TreeNodeInput = {
   id: Scalars['UUID']['input'];
   label: Scalars['String']['input'];
+  nodeType: NodeTypeEnum;
   positionX: Scalars['Float']['input'];
   positionY: Scalars['Float']['input'];
+  targetPosition: PositionEnum;
 };
 
 export type TreeUpdateInput = {
@@ -271,7 +298,7 @@ export type GetTreeByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetTreeByIdQuery = { __typename?: 'Query', getTreeById: { __typename?: 'Tree', id: any, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string } };
+export type GetTreeByIdQuery = { __typename?: 'Query', getTreeById: { __typename?: 'Tree', id: any, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, nodes: Array<{ __typename?: 'TreeNode', id: any, positionX: number, positionY: number, isComplete: boolean, label: string, nodeType: NodeTypeEnum, targetPosition: PositionEnum }>, edges: Array<{ __typename?: 'Edge', targetPosition: PositionEnum, sourcePosition: PositionEnum, targetId: string, sourceId: string }> } };
 
 export type UpdateTreeMutationVariables = Exact<{
   input: TreeUpdateInput;
@@ -468,6 +495,21 @@ export const GetTreeByIdDocument = gql`
     deletedAt
     name
     description
+    nodes {
+      id
+      positionX
+      positionY
+      isComplete
+      label
+      nodeType
+      targetPosition
+    }
+    edges {
+      targetPosition
+      sourcePosition
+      targetId
+      sourceId
+    }
   }
 }
     `;

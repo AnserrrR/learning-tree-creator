@@ -1,7 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { PositionEnum } from '../enums/position.enum';
 import { GraphQLDateTimeISO } from 'graphql-scalars';
+import { PositionEnum } from '../enums/position.enum';
 import { TreeNode } from './tree-node.object';
+import { Tree } from './tree.object';
 
 @ObjectType()
 export class Edge {
@@ -16,6 +17,8 @@ export class Edge {
   sourcePosition: PositionEnum;
 
   targetPosition: PositionEnum;
+
+  tree: Tree;
 
   @Field(() => GraphQLDateTimeISO)
   createdAt: Date;

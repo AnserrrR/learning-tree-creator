@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { TreeNodeEntity } from './tree-node.entity';
 import { PositionEnum } from '../enums/position.enum';
+import { TreeEntity } from '../../tree/tree.entity';
 
 @Entity('edge')
 export class EdgeEntity extends BaseEntity {
@@ -24,6 +25,9 @@ export class EdgeEntity extends BaseEntity {
 
   @ManyToOne(() => TreeNodeEntity)
   target: TreeNodeEntity;
+
+  @ManyToOne(() => TreeEntity)
+  tree: TreeEntity;
 
   @Column('enum', { enum: PositionEnum })
   sourcePosition: PositionEnum;

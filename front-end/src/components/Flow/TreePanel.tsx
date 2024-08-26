@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Button, ButtonGroup, Container, IconButton, Stack, Typography } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-const TreePanel = ({ onSave } : { onSave: () => {} }) => {
+const TreePanel = memo(({ onSave } : { onSave: () => void }) => {
   return (
     <>
       <Container maxWidth="lg">
@@ -35,6 +35,6 @@ const TreePanel = ({ onSave } : { onSave: () => {} }) => {
       </Container>
     </>
   );
-};
+});
 
 export default TreePanel;

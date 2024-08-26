@@ -1,4 +1,4 @@
-import { InputType, PartialType, PickType } from '@nestjs/graphql';
+import { InputType, PickType } from '@nestjs/graphql';
 import { TreeNode } from '../objects/tree-node.object';
 
 @InputType()
@@ -9,7 +9,8 @@ export class TreeNodeInput extends PickType(
     'label',
     'positionX',
     'positionY',
-
+    'targetPosition',
+    'nodeType',
   ],
   InputType,
 ) {}

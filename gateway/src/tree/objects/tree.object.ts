@@ -1,6 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { AppBaseObject } from '../../common/gql/app-base.object';
 import { TreeNode } from './tree-node.object';
+import { Edge } from './edge.object';
 
 @ObjectType()
 export class Tree extends AppBaseObject {
@@ -21,4 +22,6 @@ export class Tree extends AppBaseObject {
   chaptersCompiled: number;
 
   nodes: TreeNode[];
+
+  edges: Edge[];
 }

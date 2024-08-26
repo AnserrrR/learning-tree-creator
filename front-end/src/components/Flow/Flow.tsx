@@ -14,14 +14,14 @@ import {
   useNodesState,
   useReactFlow
 } from 'reactflow';
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { v4 } from 'uuid';
 import { initialEdges, initialNodes } from './initial-nodes';
 import ChapterNode from './ChapterNode';
 import SectionNode from './SectionNode';
-import { isNil } from 'lodash';
+import { camelCase, capitalize, isNil, startCase } from 'lodash';
 import { INodeData } from './node-data.interface';
-import { PositionEnum, useGetTreeByIdQuery, useUpdateTreeMutation } from '../../api/generated/graphql';
+import { NodeTypeEnum, PositionEnum, useGetTreeByIdQuery, useUpdateTreeMutation } from '../../api/generated/graphql';
 import TreePanel from './TreePanel';
 import { useParams } from 'react-router-dom';
 
@@ -39,19 +39,49 @@ const Flow = () => {
       id: treeId,
     },
   }).data?.getTreeById;
-  console.log(Tree);
-
 
   // Nodes and edges state
   const [
     nodes,
     setNodes,
     onNodesChange,
-  ] = useNodesState<INodeData>(initialNodes);
+  ] = useNodesState<INodeData>([]);
   const [
     edges,
     setEdges,
-  ] = useEdgesState(initialEdges);
+  ] = useEdgesState([]);
+
+  // Initial nodes
+  useEffect(() => {
+    if (Tree) {
+      setNodes(Tree.nodes.map((node) => {
+        return {
+          id: node.id,
+          position: { x: node.positionX, y: node.positionY },
+          data: { label: node.label },
+          type: camelCase(node.nodeType),
+          targetPosition: camelCase(node.targetPosition) as Position,
+        };
+      }));
+    }
+  }, [Tree, setNodes]);
+
+  // Initial edges
+  useEffect(() => {
+    if (Tree) {
+      setEdges(Tree.edges.map((edge) => {
+        return {
+          id: `${edge.sourceId}-${edge.targetId}`,
+          source: edge.sourceId,
+          target: edge.targetId,
+          sourceHandle: camelCase(edge.sourcePosition) as Position,
+          targetHandle: camelCase(edge.targetPosition) as Position,
+          markerEnd: { type: MarkerType.Arrow, height: 20, width: 20 },
+        };
+      }));
+    }
+  }, [Tree, setEdges]);
+
 
   // Node types
   const nodeTypes = useMemo(() => ({
@@ -201,25 +231,26 @@ const Flow = () => {
               label: node.data.label,
               positionX: node.position.x,
               positionY: node.position.y,
-            }
+              targetPosition: startCase(node.targetPosition ?? 'Top') as PositionEnum,
+              nodeType: startCase(camelCase(node.type)).replace(/ /g, '') as NodeTypeEnum,
+            };
           }),
           edges: edges.map((edge) => {
             return {
-              id: edge.id,
               sourceId: edge.source,
               targetId: edge.target,
-              sourcePosition: edge.sourceHandle as PositionEnum,
-              targetPosition: edge.targetHandle as PositionEnum,
-            }
+              sourcePosition: startCase(edge.sourceHandle ?? 'Bottom') as PositionEnum,
+              targetPosition: startCase(edge.targetHandle ?? 'Top') as PositionEnum,
+            };
           }),
         }
       }
     })
-  }, []);
+  }, [nodes, edges, updateTreeMutation, treeId]);
 
   return (
       <div className="tree-flow" style={{ width: '100vw', height: '100vh' }}>
-        <TreePanel />
+        <TreePanel onSave={onSave}/>
         <ReactFlow
           nodes={nodes}
           edges={edges}

@@ -6,5 +6,20 @@ query GetTreeById($id: UUID!) {
         deletedAt
         name
         description
+        nodes {
+            id
+            positionX
+            positionY
+            isComplete
+            label
+            nodeType
+            targetPosition
+        }
+        edges {
+            targetPosition
+            sourcePosition
+            targetId
+            sourceId
+        }
     }
 }

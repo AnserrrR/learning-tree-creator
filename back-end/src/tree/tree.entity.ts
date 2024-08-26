@@ -3,6 +3,7 @@ import {
 } from 'typeorm';
 import { AppBaseEntity } from '../common/entities/app-base.entity';
 import { TreeNodeEntity } from '../section/entities/tree-node.entity';
+import { EdgeEntity } from '../section/entities/edge.entity';
 
 @Entity('tree')
 export class TreeEntity extends AppBaseEntity {
@@ -18,7 +19,7 @@ export class TreeEntity extends AppBaseEntity {
   @Column('text')
   name: string;
 
-  @Column('boolean')
+  @Column('boolean', { default: false })
   isPublic: boolean;
 
   @Column('integer')
@@ -30,4 +31,8 @@ export class TreeEntity extends AppBaseEntity {
   @OneToMany(() => TreeNodeEntity, (node) => node.tree)
   @JoinColumn()
   nodes: TreeNodeEntity[];
+
+  @OneToMany(() => EdgeEntity, (edge) => edge.tree)
+  @JoinColumn()
+  edges: EdgeEntity[];
 }

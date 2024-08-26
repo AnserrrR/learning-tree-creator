@@ -2,6 +2,9 @@ export const UserPermissions = [
   // Main service methods
   'tree_get_by_id',
   'tree_get_filtered',
+  'tree_update',
+  'tree_create',
+  'tree_delete',
 
   // User service methods
   'user_get_by_id',
